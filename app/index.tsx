@@ -19,6 +19,15 @@ import ListItemButton from '@mui/material/ListItemButton';
 import ListItemText from '@mui/material/ListItemText';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Switch from '@mui/material/Switch';
+import IconButton from '@mui/material/IconButton';
+import DeleteIcon from '@mui/icons-material/Delete';
+import FolderIcon from '@mui/icons-material/Folder';
+import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
+import EventNoteIcon from '@mui/icons-material/EventNote';
+import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
+import SpeedIcon from '@mui/icons-material/Speed';
+import GavelIcon from '@mui/icons-material/Gavel';
+import AttachFileIcon from '@mui/icons-material/AttachFile';
 
 
 // Interfaces para tipagem dos dados
@@ -46,7 +55,7 @@ interface Cliente {
 
 interface JurisprudenciaItem {
     id: string;
-    tribunal: 'STJ' | 'TJSP' | 'STF' | 'TRF1' | 'TST';
+    tribunal: 'STJ' | 'TJSP' | 'STF' | 'TRF1' | 'TST' | 'API'; // Added API type
     processo: string;
     publicacao: string;
     relator: string;
@@ -219,10 +228,9 @@ const App: React.FC = () => {
         { id: 'j4', tribunal: 'TST', processo: 'RR 112233-44.2022.5.03.0001', publicacao: '05/04/2023', relator: 'Ministro A', ementa: 'DIREITO DO TRABALHO. HORAS EXTRAS. CARTÕES DE PONTO BRITÂNICOS. INVALIDADE. ÔNUS DA PROVA. A apresentação de cartões de ponto com horários de entrada e saída uniformes ("britânicos") transfere ao empregador o ônus de provar a jornada efetivamente cumprida pelo empregado, prevalecendo a jornada alegada na inicial caso o empregador não se desincumba de seu encargo probatório. Súmula 338, III, do TST.' },
         { id: 'j5', tribunal: 'TRF1', processo: 'AMS 0012345-67.2021.4.01.3400', publicacao: '20/05/2023', relator: 'Desembargador Federal B', ementa: 'DIREITO ADMINISTRATIVO. SERVIDOR PÚBLICO. REMOÇÃO. MOTIVO DE SAÚDE DE DEPENDENTE. COMPROVAÇÃO. ART. 36, III, "B" DA LEI 8.112/90. Comprovada a necessidade de remoção do servidor público para localidade diversa por motivo de saúde de dependente que conste de seu assentamento funcional, e não havendo outra forma de tratamento no local de origem, impõe-se o deferimento do pedido, nos termos da Lei nº 8.112/90. A saúde é direito fundamental e deve ser protegida.' },
     ];
-    const [jurisprudenciaDB, setJurisprudenciaDB] = useState<JurisprudenciaItem[]>(jurisprudenciaDBDefault); // Mantido para outros usos ou fallback
+    const [resultadosJuris, setResultadosJuris] = useState<JurisprudenciaItem[]>([]); 
     const [termoBuscaJuris, setTermoBuscaJuris] = useState<string>('');
-    const [filtroTribunalJuris, setFiltroTribunalJuris] = useState<string>('Todos'); // Pode ser usado para selecionar qual API/endpoint usar no futuro
-    const [resultadosJuris, setResultadosJuris] = useState<JurisprudenciaItem[]>(jurisprudenciaDBDefault); // Initialize with default
+    const [filtroTribunalJuris, setFiltroTribunalJuris] = useState<string>('Todos'); 
     const [loadingJurisSearch, setLoadingJurisSearch] = useState<boolean>(false);
     const [resumosEmentas, setResumosEmentas] = useState<Record<string, string>>({});
     const [loadingResumoId, setLoadingResumoId] = useState<string | null>(null);
@@ -276,7 +284,7 @@ const App: React.FC = () => {
     // Estado para Configurações de Notificações
     const initialNotificacoesConfig: NotificacoesConfig = {
         emailPrazos: true,
-        pushAudiencias: false, // Default to false as push notifs are conceptual for web
+        pushAudiencias: false, 
         resumoSemanal: true,
     };
     const [configNotificacoes, setConfigNotificacoes] = useState<NotificacoesConfig>(initialNotificacoesConfig);
@@ -316,13 +324,12 @@ const App: React.FC = () => {
         const storedEventos = localStorage.getItem('lexProEventos');
         if (storedEventos) setEventos(JSON.parse(storedEventos));
 
-        // setResultadosJuris(jurisprudenciaDBDefault); // Initialize with default DB, API call will overwrite
 
         const storedNotificacoesConfig = localStorage.getItem('lexProNotificacoesConfig');
         if (storedNotificacoesConfig) {
             setConfigNotificacoes(JSON.parse(storedNotificacoesConfig));
         }
-
+        setResultadosJuris(jurisprudenciaDBDefault); // Initialize with default DB
     }, []);
 
     // Salvar API Key
@@ -346,7 +353,7 @@ const App: React.FC = () => {
                 toast.error("Erro ao inicializar IA com a chave Gemini fornecida. Verifique a chave e o console.");
             }
         } else {
-            setAiClient(null); // Clear client if key is removed or empty
+            setAiClient(null); 
         }
     }, [geminiApiKey]);
 
@@ -466,7 +473,7 @@ const App: React.FC = () => {
             id: new Date().toISOString(),
             documentos: arquivosNovoProcesso
         };
-        setProcessos(prev => [...prev, processoComId]);
+        setProcessos(prev => [processoComId, ...prev]); // Add to the beginning of the list
         setNovoProcesso({ numero: '', comarca: '', vara: '', natureza: '', partes: '', objeto: '', valorCausa: '', status: 'Ativo' });
         setArquivosNovoProcesso([]);
         const fileInput = document.getElementById('documentosProcesso') as HTMLInputElement;
@@ -537,7 +544,7 @@ ${textoProcessoIA}
     };
 
     const handleFocusPrimeiroCampoProcesso = () => {
-        const primeiroCampo = document.getElementById('numero-processo-cnj'); // Updated ID for MUI TextField
+        const primeiroCampo = document.getElementById('numero-processo-cnj'); 
         if (primeiroCampo) {
             primeiroCampo.focus();
             const formSection = primeiroCampo.closest('.form-section');
@@ -571,7 +578,7 @@ ${textoProcessoIA}
             toast.success("Cliente atualizado com sucesso!");
         } else {
             const clienteComId: Cliente = { ...novoCliente, id: new Date().toISOString() };
-            setClientes(prev => [...prev, clienteComId]);
+            setClientes(prev => [clienteComId, ...prev]);
             toast.success("Cliente adicionado com sucesso!");
         }
         setEditingClienteId(null);
@@ -613,25 +620,24 @@ ${textoProcessoIA}
     
         if (!termoBuscaJuris.trim()) {
             toast.info("Por favor, insira um termo para a pesquisa de jurisprudência.");
-            setResultadosJuris(jurisprudenciaDBDefault); // Reverte para a lista padrão ou uma lista vazia, conforme preferência
+            setResultadosJuris(jurisprudenciaDBDefault); 
             return;
         }
     
         setLoadingJurisSearch(true);
-        setResultadosJuris([]); // Limpa resultados anteriores da API
+        setResultadosJuris([]); 
     
         const apiKey = 'APIKey cDZHYzlZa0JadVREZDJCendQbXY6SkJlTzNjLV9TRENyQk1RdnFKZGRQdw==';
-        // Endpoint específico para TJSP, conforme solicitado
         const apiUrl = 'https://api-publica.datajud.cnj.jus.br/api_publica_tjsp/_search';
     
         const queryBody = {
             query: {
                 multi_match: {
                     query: termoBuscaJuris,
-                    fields: ["ementa.texto", "classe.nome", "orgaoJulgador.nome", "numero", "relator.nome", "dadosBasicos.numero"]
+                    fields: ["ementa.texto", "classe.nome", "orgaoJulgador.nome", "numero", "relator.nome", "dadosBasicos.numero", "inteiroTeor"]
                 }
             },
-            size: 20 // Limita o número de resultados
+            size: 20 
         };
     
         try {
@@ -653,7 +659,7 @@ ${textoProcessoIA}
                 }
                 console.error('Erro na API DataJud TJSP:', response.status, errorData);
                 toast.error(`Erro ao buscar jurisprudência (TJSP): ${errorData.message || response.statusText}. Consulte o console.`);
-                setResultadosJuris(jurisprudenciaDBDefault); // Fallback para dados mockados em caso de erro da API
+                setResultadosJuris(jurisprudenciaDBDefault); 
                 return;
             }
     
@@ -667,7 +673,6 @@ ${textoProcessoIA}
                     const dataPublicacaoValue = source.dataPublicacao || source.dataDisponibilizacao;
                     if (dataPublicacaoValue) {
                         try {
-                            // Tenta criar data a partir de ISO string. Adiciona T00:00:00 se for apenas data.
                             let dateInput = dataPublicacaoValue;
                             if (typeof dateInput === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(dateInput)) {
                                dateInput += 'T00:00:00';
@@ -680,8 +685,8 @@ ${textoProcessoIA}
                     }
     
                     return {
-                        id: hit._id || `fallback-${Math.random()}`, // Garante um ID
-                        tribunal: 'TJSP', // Endpoint é específico do TJSP
+                        id: hit._id || `api-tjsp-${Math.random().toString(36).substring(7)}`,
+                        tribunal: 'API', // Indicating it's from API
                         processo: source.numero || source.dadosBasicos?.numero || 'Número não informado',
                         publicacao: dataPublicacaoStr,
                         relator: source.relator?.nome || source.julgador?.nome || 'Relator não informado',
@@ -690,20 +695,21 @@ ${textoProcessoIA}
                 });
                 setResultadosJuris(mappedResults);
                 if (mappedResults.length === 0) {
-                    toast.info("Nenhuma jurisprudência encontrada na API do TJSP para os termos informados.");
+                    toast.info("Nenhuma jurisprudência encontrada na API do TJSP para os termos informados. Exibindo resultados locais.");
+                    setResultadosJuris(jurisprudenciaDBDefault.filter(item => item.ementa.toLowerCase().includes(termoBuscaJuris.toLowerCase())));
                 } else {
                     toast.success(`${mappedResults.length} resultado(s) encontrado(s) na API do TJSP.`);
                 }
             } else {
                 console.warn('Estrutura de resposta inesperada da API DataJud TJSP:', data);
-                toast.warn('Nenhum resultado encontrado no TJSP ou formato de resposta inesperado.');
-                setResultadosJuris(jurisprudenciaDBDefault); // Fallback se a estrutura não for a esperada
+                toast.warn('Nenhum resultado encontrado no TJSP ou formato de resposta inesperado. Exibindo resultados locais.');
+                setResultadosJuris(jurisprudenciaDBDefault.filter(item => item.ementa.toLowerCase().includes(termoBuscaJuris.toLowerCase())));
             }
     
         } catch (error) {
             console.error('Falha ao buscar jurisprudência na API DataJud TJSP:', error);
-            toast.error('Falha na comunicação com a API de jurisprudência do TJSP. Verifique sua conexão ou tente mais tarde.');
-            setResultadosJuris(jurisprudenciaDBDefault); // Fallback para dados mockados em caso de erro de rede
+            toast.error('Falha na comunicação com a API de jurisprudência do TJSP. Exibindo resultados locais.');
+            setResultadosJuris(jurisprudenciaDBDefault.filter(item => item.ementa.toLowerCase().includes(termoBuscaJuris.toLowerCase())));
         } finally {
             setLoadingJurisSearch(false);
         }
@@ -933,7 +939,12 @@ ${peticaoParaAnalise}
             tipo: formEventoTipo,
             descricao: formEventoDescricao
         };
-        setEventos(prev => [...prev, novoEventoItem].sort((a,b) => new Date(a.data).getTime() - new Date(b.data).getTime()));
+        setEventos(prev => [...prev, novoEventoItem].sort((a,b) => {
+            // Adjust for proper date comparison in YYYY-MM-DD format
+            const dateA = new Date(a.data.split('-').join('/') + 'T00:00:00');
+            const dateB = new Date(b.data.split('-').join('/') + 'T00:00:00');
+            return dateA.getTime() - dateB.getTime();
+        }));
         setFormEventoData(new Date().toISOString().split('T')[0]);
         setFormEventoTitulo('');
         setFormEventoTipo('Prazo Processual');
@@ -944,7 +955,11 @@ ${peticaoParaAnalise}
     const handleSaveApiKeys = (e: FormEvent) => {
         e.preventDefault();
         setGeminiApiKey(inputGeminiApiKey.trim());
-        toast.success("Chave API do Gemini salva com sucesso!");
+        if (inputGeminiApiKey.trim()) {
+            toast.success("Chave API do Gemini salva com sucesso!");
+        } else {
+            toast.info("Chave API do Gemini removida.");
+        }
     };
 
     const handleNotificacaoChange = (key: keyof NotificacoesConfig) => {
@@ -952,7 +967,6 @@ ${peticaoParaAnalise}
     };
 
     const handleSaveNotificacoesConfig = () => {
-        // Data is already saved by useEffect, this button is for user feedback.
         toast.success("Configurações de notificações salvas!");
     };
 
@@ -961,78 +975,85 @@ ${peticaoParaAnalise}
         switch (activeModule) {
             case 'dashboard':
                 const processosAtivos = processos.filter(p => p.status === 'Ativo').length;
+                const totalAReceberDash = calcularTotalAReceber();
 
                 const today = new Date();
-                today.setHours(0, 0, 0, 0); // Normalize to start of day
+                today.setHours(0, 0, 0, 0); 
 
                 const proximosEventos = eventos
                     .filter(evento => {
                         const [year, month, day] = evento.data.split('-').map(Number);
-                        const eventoDate = new Date(year, month - 1, day); // Month is 0-indexed
-                        eventoDate.setHours(0,0,0,0); // Normalize
+                        const eventoDate = new Date(year, month - 1, day); 
+                        eventoDate.setHours(0,0,0,0);
                         return eventoDate >= today;
                     })
                     .sort((a, b) => {
-                        const [yearA, monthA, dayA] = a.data.split('-').map(Number);
-                        const dateA = new Date(yearA, monthA - 1, dayA);
-                        const [yearB, monthB, dayB] = b.data.split('-').map(Number);
-                        const dateB = new Date(yearB, monthB - 1, dayB);
+                        const dateA = new Date(a.data.split('-').join('/') + 'T00:00:00');
+                        const dateB = new Date(b.data.split('-').join('/') + 'T00:00:00');
                         return dateA.getTime() - dateB.getTime();
                     })
                     .slice(0, 3);
 
-                const totalAReceber = calcularTotalAReceber();
 
                 return (
                     <div>
                         <h2>Painel de Controle</h2>
                         <div className="dashboard-grid">
                             <div className="dashboard-card">
+                                <GavelIcon sx={{ fontSize: 40, color: 'primary.main', alignSelf: 'center', mb:1 }}/>
                                 <h3>Processos Ativos</h3>
                                 <div className="metric-value">{processosAtivos}</div>
                                 <div className="metric-label">Processos em Andamento</div>
                             </div>
 
                             <div className="dashboard-card">
-                                <h3>Próximos Prazos</h3>
+                                <EventNoteIcon sx={{ fontSize: 40, color: 'secondary.main', alignSelf: 'center', mb:1 }}/>
+                                <h3>Próximos Prazos/Eventos</h3>
                                 {proximosEventos.length > 0 ? (
                                     <ul>
                                         {proximosEventos.map(evento => (
                                             <li key={evento.id}>
                                                 <span className="event-title">{evento.titulo}</span>
                                                 <span className="event-date">
-                                                    {new Date(evento.data + 'T00:00:00').toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric' })}
+                                                    {new Date(evento.data + 'T03:00:00Z').toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric' })}
                                                 </span>
                                             </li>
                                         ))}
                                     </ul>
                                 ) : (
-                                    <p className="metric-label" style={{textAlign:'left'}}>Nenhum prazo futuro agendado.</p>
+                                    <p className="metric-label" style={{textAlign:'center', marginTop: '20px'}}>Nenhum prazo ou evento futuro agendado.</p>
                                 )}
                             </div>
 
                             <div className="dashboard-card">
+                                <AccountBalanceWalletIcon sx={{ fontSize: 40, color: 'success.main', alignSelf: 'center', mb:1 }}/>
                                 <h3>Financeiro Rápido</h3>
-                                <div className="metric-value">{formatCurrency(totalAReceber)}</div>
+                                <div className="metric-value">{formatCurrency(totalAReceberDash)}</div>
                                 <div className="metric-label">Total a Receber</div>
                             </div>
 
                             <div className="dashboard-card">
+                                 <SpeedIcon sx={{ fontSize: 40, color: 'info.main', alignSelf: 'center', mb:1 }}/>
                                 <h3>Ações Rápidas</h3>
                                 <div className="actions-container">
                                     <Button
                                         variant="contained"
                                         color="primary"
-                                        onClick={() => handleMenuClick('cadastroProcessos', 'gestao')}
+                                        startIcon={<AddCircleOutlineIcon />}
+                                        onClick={() => {
+                                            handleMenuClick('cadastroProcessos', 'gestao');
+                                            setTimeout(handleFocusPrimeiroCampoProcesso, 0);
+                                        }}
                                     >
-                                        Adicionar Novo Processo
+                                        Adicionar Processo
                                     </Button>
                                     <Button
                                         variant="contained"
                                         color="secondary"
+                                        startIcon={<EventNoteIcon />}
                                         onClick={() => handleMenuClick('agendaPrazos', 'gestao')}
                                     >
-                                        Agendar Novo Prazo/Evento
+                                        Agendar Prazo/Evento
                                     </Button>
                                 </div>
                             </div>
@@ -1084,7 +1105,7 @@ ${peticaoParaAnalise}
                             <h3>Adicionar Novo Processo Manualmente</h3>
                             <Box component="form" onSubmit={handleAddProcesso} sx={{ mt: 1 }}>
                                 <TextField
-                                    id="numero-processo-cnj" // Unique ID for accessibility and focus
+                                    id="numero-processo-cnj" 
                                     name="numero"
                                     label="Número do Processo (CNJ)"
                                     variant="outlined"
@@ -1175,26 +1196,39 @@ ${peticaoParaAnalise}
                                         <MenuItem value="Extinto">Extinto</MenuItem>
                                     </Select>
                                 </FormControl>
-                                <Box className="form-group" sx={{ mt: 2, mb: 2}}> {/* Using Box for margin for the file input */}
-                                    <label htmlFor="documentosProcesso" style={{ display: 'block', marginBottom: '8px', fontWeight:'bold', color: '#004c99' }}>
+                                <Box className="form-group" sx={{ mt: 2, mb: 2}}> 
+                                    <InputLabel htmlFor="documentosProcesso" sx={{ mb: 1, fontWeight: 'bold', color: 'primary.main' }}>
                                         Documentos do Processo (Opcional):
-                                    </label>
-                                    <input 
-                                      type="file" 
-                                      id="documentosProcesso" 
-                                      multiple 
-                                      onChange={handleArquivosNovoProcessoChange} 
-                                      style={{display: 'block', width: '100%', padding: '10px', border:'1px solid #ccc', borderRadius:'4px'}}
-                                    />
+                                    </InputLabel>
+                                    <Button
+                                        variant="outlined"
+                                        component="label"
+                                        fullWidth
+                                        startIcon={<AttachFileIcon />}
+                                    >
+                                        Selecionar Arquivos
+                                        <input 
+                                          type="file" 
+                                          id="documentosProcesso" 
+                                          multiple 
+                                          hidden
+                                          onChange={handleArquivosNovoProcessoChange} 
+                                        />
+                                    </Button>
                                     {arquivosNovoProcesso.length > 0 && (
-                                        <ul style={{ listStyleType: 'none', paddingLeft: 0, marginTop: '10px' }}>
+                                        <List dense sx={{ mt: 1, backgroundColor: '#f9f9f9', borderRadius: '4px' }}>
                                             {arquivosNovoProcesso.map((file, index) => (
-                                                <li key={index} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '5px', border: '1px solid #eee', borderRadius: '4px', marginBottom: '5px' }}>
-                                                    <span>{file.name} ({(file.size / 1024).toFixed(2)} KB)</span>
-                                                    <Button variant="outlined" color="error" size="small" onClick={() => handleRemoverArquivoNovoProcesso(file.name)}>Remover</Button>
-                                                </li>
+                                                <ListItemButton key={index} sx={{borderBottom: '1px solid #eee'}}>
+                                                    <ListItemText 
+                                                        primary={file.name} 
+                                                        secondary={`(${(file.size / 1024).toFixed(2)} KB)`} 
+                                                    />
+                                                    <IconButton edge="end" aria-label="delete" onClick={() => handleRemoverArquivoNovoProcesso(file.name)}>
+                                                        <DeleteIcon />
+                                                    </IconButton>
+                                                </ListItemButton>
                                             ))}
-                                        </ul>
+                                        </List>
                                     )}
                                 </Box>
                                 <Button
@@ -1211,10 +1245,7 @@ ${peticaoParaAnalise}
                             <h3>Processos Cadastrados</h3>
                             {processos.length === 0 ? (
                                 <div className="empty-state-container" role="region" aria-labelledby="empty-processos-heading">
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="60" height="60" fill="#0059b3" aria-hidden="true">
-                                        <path d="M0 0h24v24H0z" fill="none"/>
-                                        <path d="M10 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"/>
-                                    </svg>
+                                    <FolderIcon sx={{fontSize: 60, color: 'primary.light' }} aria-hidden="true"/>
                                     <h4 id="empty-processos-heading">Nenhum processo por aqui</h4>
                                     <p>Comece cadastrando seu primeiro processo para gerenciá-lo.</p>
                                     <Button onClick={handleFocusPrimeiroCampoProcesso} variant="contained" color="primary">
@@ -1251,36 +1282,68 @@ ${peticaoParaAnalise}
                     </div>
                 );
             case 'agendaPrazos':
-                const sortedEventos = [...eventos].sort((a, b) => new Date(a.data).getTime() - new Date(b.data).getTime());
+                const sortedEventos = [...eventos].sort((a, b) => {
+                    const dateA = new Date(a.data.split('-').join('/') + 'T00:00:00');
+                    const dateB = new Date(b.data.split('-').join('/') + 'T00:00:00');
+                    return dateA.getTime() - dateB.getTime();
+                });
                 return (
                     <div className="card">
                         <h2>Agenda e Prazos</h2>
                         <div className="form-section">
                             <h3>Adicionar Novo Evento</h3>
-                            <form onSubmit={handleAddEvento}>
-                                <div className="form-group">
-                                    <label htmlFor="formEventoData">Data:</label>
-                                    <input type="date" id="formEventoData" value={formEventoData} onChange={e => setFormEventoData(e.target.value)} required />
-                                </div>
-                                <div className="form-group">
-                                    <label htmlFor="formEventoTitulo">Título:</label>
-                                    <input type="text" id="formEventoTitulo" value={formEventoTitulo} onChange={e => setFormEventoTitulo(e.target.value)} required placeholder="Ex: Audiência João Silva"/>
-                                </div>
-                                <div className="form-group">
-                                    <label htmlFor="formEventoTipo">Tipo:</label>
-                                    <select id="formEventoTipo" value={formEventoTipo} onChange={e => setFormEventoTipo(e.target.value as EventoAgenda['tipo'])}>
-                                        <option value="Prazo Processual">Prazo Processual</option>
-                                        <option value="Audiência">Audiência</option>
-                                        <option value="Reunião">Reunião</option>
-                                        <option value="Outro">Outro</option>
-                                    </select>
-                                </div>
-                                <div className="form-group">
-                                    <label htmlFor="formEventoDescricao">Descrição (Opcional):</label>
-                                    <textarea id="formEventoDescricao" value={formEventoDescricao} onChange={e => setFormEventoDescricao(e.target.value)} rows={3} placeholder="Detalhes adicionais, link da videochamada, etc."></textarea>
-                                </div>
-                                <Button type="submit" variant="contained" color="primary">Salvar Evento</Button>
-                            </form>
+                            <Box component="form" onSubmit={handleAddEvento}>
+                                <TextField
+                                    id="formEventoData"
+                                    label="Data do Evento"
+                                    type="date"
+                                    value={formEventoData}
+                                    onChange={e => setFormEventoData(e.target.value)}
+                                    required
+                                    fullWidth
+                                    margin="normal"
+                                    InputLabelProps={{ shrink: true }}
+                                />
+                                <TextField
+                                    id="formEventoTitulo"
+                                    label="Título do Evento"
+                                    value={formEventoTitulo}
+                                    onChange={e => setFormEventoTitulo(e.target.value)}
+                                    required
+                                    placeholder="Ex: Audiência João Silva"
+                                    fullWidth
+                                    margin="normal"
+                                    InputLabelProps={{ shrink: true }}
+                                />
+                                <FormControl fullWidth margin="normal">
+                                    <InputLabel id="formEventoTipo-label">Tipo</InputLabel>
+                                    <Select
+                                        labelId="formEventoTipo-label"
+                                        id="formEventoTipo"
+                                        value={formEventoTipo}
+                                        label="Tipo"
+                                        onChange={e => setFormEventoTipo(e.target.value as EventoAgenda['tipo'])}
+                                    >
+                                        <MenuItem value="Prazo Processual">Prazo Processual</MenuItem>
+                                        <MenuItem value="Audiência">Audiência</MenuItem>
+                                        <MenuItem value="Reunião">Reunião</MenuItem>
+                                        <MenuItem value="Outro">Outro</MenuItem>
+                                    </Select>
+                                </FormControl>
+                                <TextField
+                                    id="formEventoDescricao"
+                                    label="Descrição (Opcional)"
+                                    value={formEventoDescricao}
+                                    onChange={e => setFormEventoDescricao(e.target.value)}
+                                    multiline
+                                    rows={3}
+                                    placeholder="Detalhes adicionais, link da videochamada, etc."
+                                    fullWidth
+                                    margin="normal"
+                                    InputLabelProps={{ shrink: true }}
+                                />
+                                <Button type="submit" variant="contained" color="primary" sx={{mt:1}}>Salvar Evento</Button>
+                            </Box>
                         </div>
                         <div className="list-section">
                             <h3>Próximos Eventos</h3>
@@ -1288,7 +1351,7 @@ ${peticaoParaAnalise}
                                 <ul className="data-list eventos-list">
                                     {sortedEventos.map(evento => (
                                         <li key={evento.id} className={`evento-item evento-tipo-${evento.tipo.toLowerCase().replace(/\s+/g, '-')}`}>
-                                            <span className="data-list-item-prop"><strong>Data:</strong> {new Date(evento.data + 'T00:00:00-03:00').toLocaleDateString('pt-BR', {timeZone: 'America/Sao_Paulo', weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</span>
+                                            <span className="data-list-item-prop"><strong>Data:</strong> {new Date(evento.data + 'T03:00:00Z').toLocaleDateString('pt-BR', {timeZone: 'America/Sao_Paulo', weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</span>
                                             <span className="data-list-item-prop"><strong>Título:</strong> {evento.titulo}</span>
                                             <span className="data-list-item-prop"><strong>Tipo:</strong> <span className={`badge badge-evento-${evento.tipo.toLowerCase().replace(/\s+/g, '-')}`}>{evento.tipo}</span></span>
                                             {evento.descricao && <span className="data-list-item-prop"><strong>Descrição:</strong> {evento.descricao}</span>}
@@ -1317,51 +1380,69 @@ ${peticaoParaAnalise}
                         <h2>Gestão de Clientes (CRM Jurídico)</h2>
                         <div className="form-section" id="form-gestao-clientes">
                             <h3>{editingClienteId && clienteEmEdicao ? `Editando Cliente: ${clienteEmEdicao.nome}` : 'Adicionar Novo Cliente'}</h3>
-                            <form onSubmit={handleSubmitClienteForm}>
-                                <div className="form-group">
-                                    <label htmlFor="nomeCliente">Nome Completo:</label>
-                                    <input type="text" id="nomeCliente" name="nome" value={novoCliente.nome} onChange={handleClienteInputChange} required />
-                                </div>
-                                <div className="form-group">
-                                    <label htmlFor="cpfCnpj">CPF/CNPJ:</label>
-                                    <input type="text" id="cpfCnpj" name="cpfCnpj" value={novoCliente.cpfCnpj} onChange={handleClienteInputChange} />
-                                </div>
-                                <div className="form-group">
-                                    <label htmlFor="emailCliente">E-mail:</label>
-                                    <input type="email" id="emailCliente" name="email" value={novoCliente.email} onChange={handleClienteInputChange} />
-                                </div>
-                                <div className="form-group">
-                                    <label htmlFor="telefoneCliente">Telefone:</label>
-                                    <input type="text" id="telefoneCliente" name="telefone" value={novoCliente.telefone} onChange={handleClienteInputChange} />
-                                </div>
-                                <div className="form-group">
-                                    <label htmlFor="enderecoCliente">Endereço:</label>
-                                    <textarea id="enderecoCliente" name="endereco" value={novoCliente.endereco} onChange={handleClienteInputChange} rows={3}></textarea>
-                                </div>
-                                <Button type="submit" variant="contained" color="primary" sx={{mr: editingClienteId ? 1 : 0}}>
+                            <Box component="form" onSubmit={handleSubmitClienteForm}>
+                                <TextField 
+                                    label="Nome Completo"
+                                    id="nomeCliente" name="nome" 
+                                    value={novoCliente.nome} 
+                                    onChange={handleClienteInputChange} 
+                                    required fullWidth margin="normal" InputLabelProps={{ shrink: true }}
+                                />
+                                <TextField 
+                                    label="CPF/CNPJ"
+                                    id="cpfCnpj" name="cpfCnpj" 
+                                    value={novoCliente.cpfCnpj} 
+                                    onChange={handleClienteInputChange} 
+                                    fullWidth margin="normal" InputLabelProps={{ shrink: true }}
+                                />
+                                <TextField 
+                                    label="E-mail"
+                                    type="email"
+                                    id="emailCliente" name="email" 
+                                    value={novoCliente.email} 
+                                    onChange={handleClienteInputChange} 
+                                    fullWidth margin="normal" InputLabelProps={{ shrink: true }}
+                                />
+                                <TextField 
+                                    label="Telefone"
+                                    id="telefoneCliente" name="telefone" 
+                                    value={novoCliente.telefone} 
+                                    onChange={handleClienteInputChange} 
+                                    fullWidth margin="normal" InputLabelProps={{ shrink: true }}
+                                />
+                                <TextField
+                                    label="Endereço"
+                                    id="enderecoCliente" name="endereco" 
+                                    value={novoCliente.endereco} 
+                                    onChange={handleClienteInputChange} 
+                                    multiline rows={3}
+                                    fullWidth margin="normal" InputLabelProps={{ shrink: true }}
+                                />
+                                <Button type="submit" variant="contained" color="primary" sx={{mr: editingClienteId ? 1 : 0, mt:1}}>
                                     {editingClienteId ? 'Salvar Alterações' : 'Adicionar Cliente'}
                                 </Button>
                                 {editingClienteId && (
-                                    <Button type="button" onClick={handleCancelEditCliente} variant="outlined" color="secondary">
+                                    <Button type="button" onClick={handleCancelEditCliente} variant="outlined" color="secondary" sx={{mt:1}}>
                                         Cancelar Edição
                                     </Button>
                                 )}
-                            </form>
+                            </Box>
                         </div>
 
                         <div className="list-section">
                             <h3>Clientes Cadastrados</h3>
-                             <div className="form-group" style={{marginBottom: '20px'}}>
-                                <label htmlFor="buscaCliente" style={{fontWeight: 'normal'}}>Buscar Cliente:</label>
-                                <input
-                                    type="text"
-                                    id="buscaCliente"
-                                    placeholder="Digite nome, CPF/CNPJ ou e-mail para buscar..."
-                                    value={termoBuscaCliente}
-                                    onChange={(e) => setTermoBuscaCliente(e.target.value)}
-                                    style={{maxWidth: '400px'}}
-                                />
-                            </div>
+                             <TextField
+                                label="Buscar Cliente"
+                                id="buscaCliente"
+                                placeholder="Digite nome, CPF/CNPJ ou e-mail para buscar..."
+                                value={termoBuscaCliente}
+                                onChange={(e) => setTermoBuscaCliente(e.target.value)}
+                                fullWidth
+                                margin="normal"
+                                variant="outlined"
+                                InputLabelProps={{ shrink: true }}
+                                sx={{ mb: 2, maxWidth: '500px' }}
+                            />
 
                             {clientesFiltrados.length === 0 && termoBuscaCliente.trim() !== '' && <p>Nenhum cliente encontrado com os termos da busca.</p>}
                             {clientesFiltrados.length === 0 && termoBuscaCliente.trim() === '' && <p>Nenhum cliente cadastrado.</p>}
@@ -1391,12 +1472,12 @@ ${peticaoParaAnalise}
                 return (
                     <div className="card">
                         <h2>Jurisprudência Unificada</h2>
-                        <p>Pesquise jurisprudência diretamente na API pública do Datajud (CNJ). <br/>Atualmente, a busca está configurada para o <strong>TJSP</strong>. Para resultados de outros tribunais, utilize a busca local ou aguarde futuras integrações.</p>
+                        <p>Pesquise jurisprudência diretamente na API pública do Datajud (CNJ) para o <strong>TJSP</strong>, ou no banco de dados local para outros tribunais (simulado).</p>
                         
                         <Box component="form" onSubmit={handleSearchJurisprudencia} className="form-section" sx={{display: 'flex', gap: 2, alignItems: 'flex-start', flexWrap: 'wrap', mt: 2}}>
                             <TextField
                                 id="termoBuscaJuris"
-                                label="Termo de Pesquisa (para TJSP via API)"
+                                label="Termo de Pesquisa"
                                 value={termoBuscaJuris}
                                 onChange={(e) => setTermoBuscaJuris(e.target.value)}
                                 placeholder="Ex: dano moral, apelação, nome do relator..."
@@ -1404,32 +1485,38 @@ ${peticaoParaAnalise}
                                 sx={{flexGrow: 1, minWidth: '300px'}}
                                 InputLabelProps={{ shrink: true }}
                             />
-                            {/* O filtro de tribunal aqui é mais para informação, já que a API está fixa para TJSP */}
-                            <FormControl variant="outlined" sx={{minWidth: 200}} disabled>
-                                <InputLabel id="filtroTribunalJuris-label">Tribunal (API)</InputLabel>
+                            <FormControl variant="outlined" sx={{minWidth: 200}}>
+                                <InputLabel id="filtroTribunalJuris-label">Tribunal</InputLabel>
                                 <Select
                                     labelId="filtroTribunalJuris-label"
-                                    value="TJSP"
-                                    label="Tribunal (API)"
-                                    readOnly
+                                    id="filtroTribunalJuris"
+                                    value={filtroTribunalJuris}
+                                    label="Tribunal"
+                                    onChange={(e) => setFiltroTribunalJuris(e.target.value)}
                                 >
-                                    <MenuItem value="TJSP">TJSP (API Datajud)</MenuItem>
+                                    <MenuItem value="Todos">Todos (Local)</MenuItem>
+                                    <MenuItem value="API_TJSP">TJSP (API Datajud)</MenuItem>
+                                    <MenuItem value="STJ">STJ (Local)</MenuItem>
+                                    <MenuItem value="TJSP">TJSP (Local)</MenuItem>
+                                    <MenuItem value="STF">STF (Local)</MenuItem>
+                                    <MenuItem value="TST">TST (Local)</MenuItem>
+                                    <MenuItem value="TRF1">TRF1 (Local)</MenuItem>
                                 </Select>
                             </FormControl>
                             <Button type="submit" variant="contained" color="primary" disabled={loadingJurisSearch} sx={{height: '56px'}}>
-                                {loadingJurisSearch ? 'Pesquisando no TJSP...' : 'Pesquisar no TJSP (API)'}
+                                {loadingJurisSearch ? 'Pesquisando...' : (filtroTribunalJuris === 'API_TJSP' ? 'Pesquisar no TJSP (API)' : 'Pesquisar Local')}
                             </Button>
                         </Box>
 
                         <div className="list-section" aria-live="polite">
                             <h3>Resultados da Pesquisa</h3>
                             {resultadosJuris.length === 0 && !loadingJurisSearch && <p>Nenhuma jurisprudência encontrada para os critérios informados.</p>}
-                            {loadingJurisSearch && <p>Carregando resultados da API do TJSP...</p>}
+                            {loadingJurisSearch && <p>Carregando resultados...</p>}
                             {!loadingJurisSearch && resultadosJuris.length > 0 && (
                                 <ul className="data-list">
                                     {resultadosJuris.map(item => (
                                         <li key={item.id} className="juris-item" aria-busy={loadingResumoId === item.id}>
-                                            <span className="data-list-item-prop"><strong>Tribunal:</strong> {item.tribunal}</span>
+                                            <span className="data-list-item-prop"><strong>Tribunal:</strong> {item.tribunal === 'API' ? 'TJSP (API)' : item.tribunal}</span>
                                             <span className="data-list-item-prop"><strong>Processo:</strong> <code>{item.processo}</code></span>
                                             <span className="data-list-item-prop"><strong>Publicação:</strong> {item.publicacao}</span>
                                             <span className="data-list-item-prop"><strong>Relator:</strong> {item.relator}</span>
@@ -1463,9 +1550,8 @@ ${peticaoParaAnalise}
                             )}
                         </div>
                          <p style={{marginTop: '20px', fontSize: '0.85em', color: '#6c757d'}}>
-                             <strong>Fonte dos Dados:</strong> Resultados do TJSP são obtidos em tempo real via API Pública do Datajud (CNJ).
-                             Para outros tribunais ou em caso de falha da API, podem ser exibidos dados locais de exemplo.
-                             A chave de API para o Datajud está configurada no código-fonte.
+                             <strong>Fonte dos Dados:</strong> Resultados do TJSP (API) são obtidos em tempo real via API Pública do Datajud (CNJ).
+                             Para outros tribunais ou em caso de falha da API, são exibidos dados locais de exemplo.
                          </p>
                     </div>
                 );
@@ -1508,7 +1594,7 @@ ${peticaoParaAnalise}
                                             border: '1px solid #eee', 
                                             mb: 1, 
                                             borderRadius: '4px',
-                                            '&:hover': { backgroundColor: '#f9f9f9'} 
+                                            '&:hover': { backgroundColor: '#f0f8ff'} 
                                         }}
                                     >
                                         <ListItemText
@@ -1592,8 +1678,8 @@ ${peticaoParaAnalise}
 
                         {activeCalculator === 'monetaria' && <CalculadoraMonetaria />}
                         {activeCalculator === 'prazos' && <CalculadoraPrazos />}
-
-                        {activeCalculator !== 'monetaria' && activeCalculator !== 'prazos' && (
+                        
+                        {(activeCalculator !== 'monetaria' && activeCalculator !== 'prazos') && (
                              <>
                                 <hr style={{marginTop: '30px'}} />
                                 <h4>Outras Calculadoras (descritivo):</h4>
@@ -1693,7 +1779,7 @@ ${peticaoParaAnalise}
                     </div>
                 );
             case 'controleFinanceiro':
-                const totalAReceberCtrl = calcularTotalAReceber(); // Renamed to avoid conflict in scope
+                const totalAReceberCtrl = calcularTotalAReceber(); 
                 const totalDespesasMes = calcularTotalDespesasMesAtual();
                 const honorariosRegistrados = registrosFinanceiros.filter(r => r.tipo === 'honorario') as Honorario[];
                 const despesasRegistradas = registrosFinanceiros.filter(r => r.tipo === 'despesa') as Despesa[];
@@ -1721,7 +1807,7 @@ ${peticaoParaAnalise}
                                     <Select 
                                         labelId="novoHonorarioClienteId-label"
                                         id="novoHonorarioClienteId" 
-                                        name="clienteId" // Ensure name matches state update logic if generic handler used
+                                        name="clienteId" 
                                         value={novoHonorarioClienteId} 
                                         label="Cliente"
                                         onChange={e => setNovoHonorarioClienteId(e.target.value)} required>
@@ -1922,14 +2008,9 @@ ${peticaoParaAnalise}
                                 margin="normal"
                                 variant="outlined"
                                 InputLabelProps={{ shrink: true }}
-                            />
-                            {geminiApiKey && aiClient && (
-                                <p style={{color: 'green', fontSize: '0.9em', marginTop: '5px'}}>Chave Gemini ativa.</p>
-                            )}
-                             {geminiApiKey && !aiClient && (
-                                <p style={{color: 'red', fontSize: '0.9em', marginTop: '5px'}}>Chave Gemini configurada, mas houve um erro na inicialização. Verifique o console.</p>
-                            )}
-                            
+                                helperText={geminiApiKey && aiClient ? "Chave Gemini ativa e cliente IA inicializado." : (geminiApiKey && !aiClient ? "Chave Gemini configurada, mas houve erro na inicialização do cliente IA." : "Chave Gemini não configurada.")}
+                                FormHelperTextProps={{ sx: { color: geminiApiKey && aiClient ? 'green' : (geminiApiKey && !aiClient ? 'red' : 'gray') } }}
+                            />                            
 
                             <TextField 
                                 type="password" 
@@ -2026,14 +2107,16 @@ ${peticaoParaAnalise}
                     <div className="card">
                         <h2>Segurança</h2>
                         <p>Sua tranquilidade e a proteção dos seus dados são nossa prioridade.</p>
-                        <h4>Medidas de Segurança (descritivo):</h4>
+                        <h4>Medidas de Segurança:</h4>
                         <ul>
-                            <li>Autenticação de Dois Fatores (2FA) - <em>(Planejado para futura implementação)</em></li>
-                            <li>Criptografia de Ponta a Ponta para dados sensíveis em trânsito e em repouso - <em>(Conceito)</em></li>
-                            <li>Conformidade com a LGPD: Todos os dados, especialmente os de clientes e processos, são tratados com o mais alto rigor, garantindo os direitos dos titulares. O armazenamento local atual reforça o controle do usuário sobre seus dados.</li>
-                            <li>Chaves de API: As chaves de API fornecidas por você para serviços de IA são armazenadas localmente em seu navegador e usadas diretamente para se comunicar com os provedores de IA, não passando por nossos servidores.</li>
+                            <li><strong>Armazenamento Local:</strong> Todos os seus dados (processos, clientes, finanças, perfil, configurações) são armazenados exclusivamente no seu navegador (localStorage). Eles não são enviados ou armazenados em nossos servidores.</li>
+                            <li><strong>Controle do Usuário:</strong> Você tem controle total sobre seus dados. Limpar o cache do navegador removerá todos os dados armazenados pelo Lex Pro Brasil.</li>
+                            <li><strong>Chaves de API:</strong> As chaves de API que você fornece para serviços de Inteligência Artificial (como Google Gemini) são também armazenadas localmente no seu navegador e são usadas para comunicação direta entre o seu navegador e o provedor da API. Elas não transitam por nossos servidores.</li>
+                            <li><strong>Conformidade com a LGPD (Conceitual):</strong> O design prioriza a privacidade e o controle do usuário sobre seus dados, alinhando-se com os princípios da LGPD.</li>
+                            <li>Autenticação de Dois Fatores (2FA) - <em>(Planejado para futura implementação caso haja funcionalidades online)</em></li>
+                            <li>Criptografia de Ponta a Ponta para dados sensíveis em trânsito e em repouso - <em>(Conceito, aplicável principalmente a dados em trânsito se houvesse comunicação com servidor)</em></li>
                         </ul>
-                         <p><em>(Esta seção ainda é descritiva, com ênfase nos conceitos de segurança a serem aplicados.)</em></p>
+                         <p><em>(Recursos como 2FA e criptografia ponta-a-ponta são relevantes para arquiteturas cliente-servidor e estão listados como conceitos para futuras evoluções que envolvam tal arquitetura.)</em></p>
                     </div>
                 );
             case 'planoAssinatura':
@@ -2044,14 +2127,14 @@ ${peticaoParaAnalise}
                         <h4>Plano Lex Pro Essencial (Gratuito com sua API Key)</h4>
                         <ul>
                             <li>Cadastro de Clientes (ilimitado)</li>
-                            <li>Cadastro de Processos (ilimitado)</li>
+                            <li>Cadastro de Processos (ilimitado, com upload de arquivos por sessão)</li>
                             <li>Agenda e Prazos (Básica)</li>
                             <li>Calculadora de Atualização Monetária</li>
                             <li>Calculadora de Prazos Processuais</li>
                             <li>Gerador de Documentos (com templates básicos)</li>
                             <li>Controle Financeiro Básico</li>
                             <li>Perfil do Usuário</li>
-                            <li>Funcionalidades de IA (requer sua própria API Key Gemini)
+                            <li>Funcionalidades de IA (requer sua própria API Key Gemini configurada em "Configurar Chaves de IA")
                                 <ul>
                                    <li>Pesquisa de Jurisprudência Unificada com Resumo por IA <span className="badge badge-ia">IA</span></li>
                                    <li>Análise de Petições com IA <span className="badge badge-ia">IA</span></li>
@@ -2148,6 +2231,7 @@ root.render(
     </React.StrictMode>
 );
 
+// Adiciona regras CSS se não existirem
 const styleSheet = document.styleSheets[0];
 if (styleSheet) {
     const addRuleIfNotExists = (ruleText: string) => {
@@ -2184,10 +2268,10 @@ if (styleSheet) {
         `.markdown-result { background-color: #f8f9fa; border: 1px solid #dee2e6; border-radius: 5px; padding: 15px; margin-top: 15px; white-space: pre-wrap; font-family: 'Courier New', Courier, monospace; line-height: 1.5; }`,
         `.markdown-result strong { font-weight: bold; color: #003366; }`,
         `.eventos-list li { border-left-width: 5px; border-left-style: solid; }`,
-        `.evento-tipo-prazo-processual { border-left-color: #dc3545; }`, /* Red for deadlines */
-        `.evento-tipo-audiência { border-left-color: #ffc107; }`, /* Yellow for hearings */
-        `.evento-tipo-reunião { border-left-color: #17a2b8; }`, /* Teal for meetings */
-        `.evento-tipo-outro { border-left-color: #6c757d; }`, /* Grey for other */
+        `.evento-tipo-prazo-processual { border-left-color: #dc3545; }`, 
+        `.evento-tipo-audiência { border-left-color: #ffc107; }`, 
+        `.evento-tipo-reunião { border-left-color: #17a2b8; }`, 
+        `.evento-tipo-outro { border-left-color: #6c757d; }`, 
         `.badge-evento-prazo-processual { background-color: #dc3545; color: white;}`,
         `.badge-evento-audiência { background-color: #ffc107; color: black;}`,
         `.badge-evento-reunião { background-color: #17a2b8; color: white;}`,
@@ -2195,25 +2279,25 @@ if (styleSheet) {
         `.ia-section { background-color: #e6f7ff; padding: 20px; border-radius: 5px; margin-bottom: 30px; border: 1px solid #b3daff; }`,
         `.ia-section h3 .badge-ia { background-color: #007bff; color: white; }`,
         `.empty-state-container { text-align: center; padding: 40px 20px; background-color: #f8f9fa; border-radius: 8px; margin-top: 20px; border: 1px dashed #d1d9e0; }`,
-        `.empty-state-container svg { margin-bottom: 15px; }`,
+        `.empty-state-container svg { margin-bottom: 15px; }`, // For direct SVG elements if used
         `.empty-state-container h4 { color: #003366; margin-bottom: 10px; font-size: 1.5em; margin-top: 0;}`,
         `.empty-state-container p { color: #495057; margin-bottom: 20px; font-size: 1em; }`,
         `.dashboard-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; padding-top: 10px; }`,
-        `.dashboard-card { background-color: #ffffff; border-radius: 8px; padding: 20px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); display: flex; flex-direction: column; min-height: 180px; }`,
-        `.dashboard-card h3 { margin-top: 0; margin-bottom: 15px; font-size: 1.15em; color: #003366; }`,
+        `.dashboard-card { background-color: #ffffff; border-radius: 8px; padding: 20px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); display: flex; flex-direction: column; min-height: 200px; justify-content: space-between; }`,
+        `.dashboard-card h3 { margin-top: 0; margin-bottom: 10px; font-size: 1.15em; color: #003366; text-align: center; }`,
         `.dashboard-card .metric-value { font-size: 2.2em; font-weight: 600; color: #0059b3; margin-bottom: 5px; text-align: center; line-height: 1.2; }`,
-        `.dashboard-card .metric-label { font-size: 0.9em; color: #6c757d; text-align: center; margin-bottom: 15px; }`,
-        `.dashboard-card ul { list-style: none; padding: 0; margin: 0; flex-grow: 1; }`,
-        `.dashboard-card ul li { padding: 8px 0; border-bottom: 1px solid #f0f0f0; font-size: 0.9em; display: flex; justify-content: space-between; align-items: center; }`,
+        `.dashboard-card .metric-label { font-size: 0.9em; color: #6c757d; text-align: center; margin-bottom: 10px; flex-grow: 1; }`,
+        `.dashboard-card ul { list-style: none; padding: 0; margin: 0; flex-grow: 1; max-height: 100px; overflow-y: auto; }`,
+        `.dashboard-card ul li { padding: 6px 0; border-bottom: 1px solid #f0f0f0; font-size: 0.9em; display: flex; justify-content: space-between; align-items: center; }`,
         `.dashboard-card ul li:last-child { border-bottom: none; }`,
-        `.dashboard-card .event-title { font-weight: 500; color: #343a40; }`,
-        `.dashboard-card .event-date { color: #495057; font-size: 0.85em; background-color: #e9ecef; padding: 2px 6px; border-radius: 4px; }`,
-        `.dashboard-card .actions-container { margin-top: auto; display: flex; flex-direction: column; gap: 10px; }`,
+        `.dashboard-card .event-title { font-weight: 500; color: #343a40; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 180px; }`,
+        `.dashboard-card .event-date { color: #495057; font-size: 0.85em; background-color: #e9ecef; padding: 2px 6px; border-radius: 4px; white-space: nowrap; }`,
+        `.dashboard-card .actions-container { margin-top: 15px; display: flex; flex-direction: column; gap: 10px; }`,
         `.dashboard-card .actions-container .MuiButton-root { width: 100%; }`,
-        `.switch-label-full-width { display: flex; width: 100%; justify-content: space-between; align-items: center; margin-left: 0; margin-right: 0; padding: 8px 0; border-bottom: 1px solid #eee; }`,
+        `.switch-label-full-width { display: flex; width: 100%; justify-content: space-between; align-items: center; margin-left: 0 !important; margin-right: 0 !important; padding: 8px 0; border-bottom: 1px solid #eee; }`,
         `.switch-label-full-width .MuiFormControlLabel-label { flex-grow: 1; }`,
-        `.switch-label-full-width:last-child { border-bottom: none; }`
-
+        `.switch-label-full-width:last-child { border-bottom: none; }`,
+        `.sub-module-nav { display: flex; gap: 8px; margin-bottom: 20px; padding-bottom: 10px; border-bottom: 1px solid #eee; }`
 
     ];
 

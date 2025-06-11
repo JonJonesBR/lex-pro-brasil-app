@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lex Pro Brasil</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -73,7 +74,8 @@
              cursor: pointer;
         }
 
-        .sidebar ul li .module-title.clickable:hover {
+        .sidebar ul li .module-title.clickable:hover,
+        .sidebar ul li .module-title[role="button"]:hover {
             background-color: #004c99; /* Azul intermediário ao passar o mouse */
              color: #fff;
         }
@@ -202,7 +204,6 @@
             font-size: 0.95em;
         }
 
-        /* Form Styles (some may be overridden or made redundant by MUI) */
         .form-section {
             margin-bottom: 30px;
             padding-bottom: 20px;
@@ -212,15 +213,16 @@
             border-bottom: none;
             padding-bottom: 0;
         }
-        .form-group { /* Still useful for MUI component margins */
-            margin-bottom: 20px; /* Increased margin for MUI fields */
+        .form-group { 
+            margin-bottom: 20px; 
         }
-        .form-group label { /* MUI uses InputLabel, this might not be needed */
+        .form-group label { 
             display: block;
             margin-bottom: 5px;
             font-weight: bold;
             color: #004c99;
         }
+        /* Default input styling (can be overridden by MUI) */
         .form-group input[type="text"],
         .form-group input[type="number"],
         .form-group input[type="email"],
@@ -240,7 +242,7 @@
             outline: none;
         }
 
-        button.btn-primary { /* Will be replaced by MUI Button */
+        button.btn-primary { /* Base for non-MUI buttons, if any */
             background-color: #0059b3;
             color: white;
             padding: 10px 20px;
@@ -258,7 +260,6 @@
             cursor: not-allowed;
         }
 
-        /* List Styles */
         .data-list {
             list-style: none;
             padding: 0;
@@ -294,21 +295,20 @@
             color: #003366;
         }
 
-        /* Markdown Result Display */
         .markdown-result {
-            background-color: #f8f9fa; /* Um pouco diferente do card para destacar */
+            background-color: #f8f9fa; 
             border: 1px solid #dee2e6;
             border-radius: 5px;
             padding: 15px;
             margin-top: 20px;
-            white-space: pre-wrap; /* Essencial para manter quebras de linha e espaços do Markdown */
-            font-family: 'Consolas', 'Monaco', 'Courier New', monospace; /* Fonte monoespaçada para melhor leitura de código/texto estruturado */
+            white-space: pre-wrap; 
+            font-family: 'Consolas', 'Monaco', 'Courier New', monospace; 
             line-height: 1.6;
             color: #343a40;
         }
-        .markdown-result strong, .markdown-result b { /* Estilo para negrito no Markdown */
+        .markdown-result strong, .markdown-result b { 
             font-weight: bold;
-            color: #003366; /* Azul escuro para dar destaque */
+            color: #003366; 
         }
         .markdown-result h1, .markdown-result h2, .markdown-result h3, .markdown-result h4 {
              color: #004c99;
@@ -321,27 +321,7 @@
          .markdown-result li {
             margin-bottom: 0.3em;
         }
-
-        /* Styling for Notification Toggles */
-        .switch-label-full-width {
-            display: flex; /* Enables flex properties */
-            width: 100%; /* Takes full width */
-            justify-content: space-between; /* Pushes label and switch to opposite ends */
-            align-items: center; /* Vertically aligns items */
-            margin-left: 0 !important; /* Override MUI default if any */
-            margin-right: 0 !important; /* Override MUI default if any */
-            padding: 8px 0; /* Add some padding */
-            border-bottom: 1px solid #eee; /* Optional: separator */
-        }
-        .switch-label-full-width .MuiFormControlLabel-label { /* Target the label part */
-            flex-grow: 1; /* Allows label to take available space */
-        }
-        .switch-label-full-width:last-child {
-            border-bottom: none; /* No border for the last item */
-        }
-
-
-        /* Responsividade básica */
+        
         @media (max-width: 768px) {
             body, #root, .app-container {
                 flex-direction: column;
@@ -370,30 +350,35 @@
             .form-group input[type="date"],
             .form-group select,
             .form-group textarea {
-                width: calc(100% - 22px); /* Adjust for padding and border */
+                width: calc(100% - 22px); 
+            }
+            .dashboard-grid {
+                 grid-template-columns: 1fr; /* Single column on small screens */
             }
         }
     </style>
 <script type="importmap">
 {
   "imports": {
-    "react/": "https://esm.sh/react@^19.1.0/",
-    "react": "https://esm.sh/react@^19.1.0",
-    "react-dom/": "https://esm.sh/react-dom@^19.1.0/",
-    "@google/genai": "https://esm.sh/@google/genai@^1.4.0",
-    "react-toastify/": "https://esm.sh/react-toastify@^11.0.5/",
-    "react-toastify": "https://esm.sh/react-toastify@^11.0.5",
-    "react-native": "https://esm.sh/react-native@^0.79.3",
-    "@react-native-async-storage/async-storage": "https://esm.sh/@react-native-async-storage/async-storage@^2.2.0",
-    "@react-navigation/bottom-tabs": "https://esm.sh/@react-navigation/bottom-tabs@^7.3.14",
-    "@react-navigation/native": "https://esm.sh/@react-navigation/native@^7.1.10",
-    "@expo/vector-icons/": "https://esm.sh/@expo/vector-icons@^14.1.0/",
+    "react/": "https://esm.sh/react@^18.2.0/",
+    "react": "https://esm.sh/react@^18.2.0",
+    "react-dom/": "https://esm.sh/react-dom@^18.2.0/",
+    "react-dom": "https://esm.sh/react-dom@^18.2.0",
+    "@google/genai": "https://esm.sh/@google/genai@^0.14.0",
+    "react-toastify/": "https://esm.sh/react-toastify@^9.1.3/",
+    "react-toastify": "https://esm.sh/react-toastify@^9.1.3",
     "@mui/material/": "https://esm.sh/@mui/material@^5.15.20/",
     "@mui/material": "https://esm.sh/@mui/material@^5.15.20",
+    "@mui/icons-material/": "https://esm.sh/@mui/icons-material@^5.15.20/",
     "@emotion/react/": "https://esm.sh/@emotion/react@^11.11.4/",
     "@emotion/react": "https://esm.sh/@emotion/react@^11.11.4",
     "@emotion/styled/": "https://esm.sh/@emotion/styled@^11.11.5/",
-    "@emotion/styled": "https://esm.sh/@emotion/styled@^11.11.5"
+    "@emotion/styled": "https://esm.sh/@emotion/styled@^11.11.5",
+    "react-native": "https://esm.sh/react-native@^0.79.3",
+    "@react-native-async-storage/async-storage": "https://esm.sh/@react-native-async-storage/async-storage@^2.2.0",
+    "@react-navigation/native": "https://esm.sh/@react-navigation/native@^7.1.10",
+    "@react-navigation/bottom-tabs": "https://esm.sh/@react-navigation/bottom-tabs@^7.3.14",
+    "@expo/vector-icons/": "https://esm.sh/@expo/vector-icons@^14.1.0/"
   }
 }
 </script>
@@ -401,7 +386,7 @@
 </head>
 <body>
     <div id="root"></div>
-    <script type="module" src="index.tsx"></script>
+    <script type="module" src="app/index.tsx"></script>
 <script type="module" src="/index.tsx"></script>
 </body>
 </html>

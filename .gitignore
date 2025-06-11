@@ -1,20 +1,24 @@
-# Dependências
-node_modules
-
-# Arquivos de Build
-dist
-.vite
-
 # Logs
+logs
+*.log
 npm-debug.log*
 yarn-debug.log*
+yarn-error.log*
 pnpm-debug.log*
+lerna-debug.log*
 
-# Arquivos de Ambiente Local (MUITO IMPORTANTE PARA SEGURANÇA)
-.env
-.env.local
-.env.*.local
+node_modules
+dist
+dist-ssr
+*.local
 
-# Arquivos de Sistema Operacional
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea
 .DS_Store
-Thumbs.db
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
