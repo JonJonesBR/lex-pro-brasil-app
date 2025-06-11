@@ -1,0 +1,407 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lex Pro Brasil</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f2f5;
+            color: #333;
+            display: flex;
+            height: 100vh;
+            overflow: hidden; /* Prevent body scroll when content scrolls */
+        }
+
+        #root {
+            display: flex;
+            flex-grow: 1;
+        }
+
+        .app-container {
+            display: flex;
+            width: 100%;
+            height: 100%;
+            background-color: #fff;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .sidebar {
+            width: 280px;
+            background-color: #003366; /* Azul escuro profissional */
+            color: #fff;
+            padding: 20px;
+            height: 100vh;
+            overflow-y: auto;
+            flex-shrink: 0;
+            box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+        }
+
+        .sidebar h1 {
+            font-size: 1.8em;
+            text-align: center;
+            margin-bottom: 25px;
+            color: #e6f7ff; /* Azul claro para o título */
+        }
+
+        .sidebar ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .sidebar ul li {
+            margin-bottom: 10px;
+        }
+
+        .sidebar ul li .module-title {
+            font-weight: bold;
+            font-size: 1.1em;
+            padding: 12px 15px;
+            display: block;
+            color: #b3daff; /* Azul mais claro para títulos de módulo */
+            border-radius: 5px;
+            transition: background-color 0.3s ease, color 0.3s ease;
+            cursor: default; /* Not clickable itself */
+        }
+        
+        .sidebar ul li .module-title.clickable {
+             cursor: pointer;
+        }
+
+        .sidebar ul li .module-title.clickable:hover {
+            background-color: #004c99; /* Azul intermediário ao passar o mouse */
+             color: #fff;
+        }
+        
+        .sidebar ul li .module-title.clickable.active {
+            background-color: #0059b3; /* Azul mais vibrante para ativo */
+            color: #fff;
+            font-weight: bold;
+        }
+
+        .sidebar ul.sub-menu {
+            margin-left: 20px;
+            margin-top: 5px;
+            border-left: 2px solid #004c99;
+            padding-left: 10px;
+        }
+
+        .sidebar ul.sub-menu li a {
+            display: block;
+            padding: 10px 15px;
+            color: #e6f7ff;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 0.95em;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        .sidebar ul.sub-menu li a:hover {
+            background-color: #004c99;
+            color: #fff;
+        }
+
+        .sidebar ul.sub-menu li a.active {
+            background-color: #0059b3;
+            color: #fff;
+            font-weight: bold;
+        }
+
+        .main-content {
+            flex-grow: 1;
+            padding: 30px;
+            overflow-y: auto;
+            height: 100vh;
+            background-color: #f8f9fa; /* Fundo levemente acinzentado para conteúdo */
+        }
+
+        .main-content h2 {
+            color: #003366;
+            font-size: 1.8em;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #0059b3;
+            padding-bottom: 10px;
+        }
+
+        .main-content h3 {
+            color: #004c99;
+            font-size: 1.4em;
+            margin-top: 25px;
+            margin-bottom: 15px;
+        }
+        
+        .main-content h4 {
+            color: #0059b3;
+            font-size: 1.2em;
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+
+        .main-content p, .main-content ul {
+            font-size: 1em;
+            line-height: 1.6;
+            color: #495057; /* Cinza escuro para texto */
+        }
+
+        .main-content ul {
+            padding-left: 20px;
+        }
+        
+        .main-content li {
+            margin-bottom: 8px;
+        }
+
+        .card {
+            background-color: #fff;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.07);
+        }
+
+        .card h4 {
+            margin-top: 0;
+        }
+        
+        .badge {
+            display: inline-block;
+            background-color: #ffc107; /* Amarelo para destaque */
+            color: #333;
+            padding: 0.3em 0.6em;
+            border-radius: 0.25rem;
+            font-size: 0.8em;
+            font-weight: bold;
+            margin-left: 5px;
+            vertical-align: middle;
+        }
+
+        .badge-ia {
+            background-color: #17a2b8; /* Azul-petróleo para IA */
+            color: white;
+        }
+        
+        .badge-pro {
+            background-color: #6f42c1; /* Roxo para Pro */
+            color: white;
+        }
+        
+        .footer-summary {
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid #ddd;
+        }
+        .footer-summary h3 {
+            color: #003366;
+        }
+        .footer-summary p {
+            font-size: 0.95em;
+        }
+
+        /* Form Styles (some may be overridden or made redundant by MUI) */
+        .form-section {
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #eee;
+        }
+        .form-section:last-of-type {
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+        .form-group { /* Still useful for MUI component margins */
+            margin-bottom: 20px; /* Increased margin for MUI fields */
+        }
+        .form-group label { /* MUI uses InputLabel, this might not be needed */
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #004c99;
+        }
+        .form-group input[type="text"],
+        .form-group input[type="number"],
+        .form-group input[type="email"],
+        .form-group input[type="date"],
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+            font-size: 1em;
+        }
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+            border-color: #0059b3;
+            box-shadow: 0 0 0 0.2rem rgba(0, 89, 179, 0.25);
+            outline: none;
+        }
+
+        button.btn-primary { /* Will be replaced by MUI Button */
+            background-color: #0059b3;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: background-color 0.3s ease;
+        }
+        button.btn-primary:hover {
+            background-color: #004c99;
+        }
+         button.btn-primary:disabled {
+            background-color: #a0c3e0;
+            cursor: not-allowed;
+        }
+
+        /* List Styles */
+        .data-list {
+            list-style: none;
+            padding: 0;
+        }
+        .data-list li {
+            background-color: #e9ecef;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            border: 1px solid #dee2e6;
+        }
+        .data-list li strong {
+            color: #003366;
+        }
+         .data-list-item-prop {
+            display: block;
+            margin-bottom: 5px;
+        }
+        .data-list-item-prop code {
+            background-color: #d1ecf1;
+            padding: 2px 4px;
+            border-radius: 3px;
+            color: #0c5460;
+        }
+
+        .result-display {
+            margin-top: 15px;
+            padding: 10px;
+            background-color: #e6f7ff;
+            border: 1px solid #b3daff;
+            border-radius: 4px;
+            font-weight: bold;
+            color: #003366;
+        }
+
+        /* Markdown Result Display */
+        .markdown-result {
+            background-color: #f8f9fa; /* Um pouco diferente do card para destacar */
+            border: 1px solid #dee2e6;
+            border-radius: 5px;
+            padding: 15px;
+            margin-top: 20px;
+            white-space: pre-wrap; /* Essencial para manter quebras de linha e espaços do Markdown */
+            font-family: 'Consolas', 'Monaco', 'Courier New', monospace; /* Fonte monoespaçada para melhor leitura de código/texto estruturado */
+            line-height: 1.6;
+            color: #343a40;
+        }
+        .markdown-result strong, .markdown-result b { /* Estilo para negrito no Markdown */
+            font-weight: bold;
+            color: #003366; /* Azul escuro para dar destaque */
+        }
+        .markdown-result h1, .markdown-result h2, .markdown-result h3, .markdown-result h4 {
+             color: #004c99;
+             margin-top: 1.2em;
+             margin-bottom: 0.5em;
+        }
+        .markdown-result ul, .markdown-result ol {
+            padding-left: 25px;
+        }
+         .markdown-result li {
+            margin-bottom: 0.3em;
+        }
+
+        /* Styling for Notification Toggles */
+        .switch-label-full-width {
+            display: flex; /* Enables flex properties */
+            width: 100%; /* Takes full width */
+            justify-content: space-between; /* Pushes label and switch to opposite ends */
+            align-items: center; /* Vertically aligns items */
+            margin-left: 0 !important; /* Override MUI default if any */
+            margin-right: 0 !important; /* Override MUI default if any */
+            padding: 8px 0; /* Add some padding */
+            border-bottom: 1px solid #eee; /* Optional: separator */
+        }
+        .switch-label-full-width .MuiFormControlLabel-label { /* Target the label part */
+            flex-grow: 1; /* Allows label to take available space */
+        }
+        .switch-label-full-width:last-child {
+            border-bottom: none; /* No border for the last item */
+        }
+
+
+        /* Responsividade básica */
+        @media (max-width: 768px) {
+            body, #root, .app-container {
+                flex-direction: column;
+                height: auto;
+                overflow: visible;
+            }
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: relative;
+                box-shadow: none;
+                border-bottom: 2px solid #002244;
+            }
+            .main-content {
+                height: auto;
+                overflow-y: visible;
+                padding: 20px;
+            }
+            .sidebar h1 {
+                font-size: 1.5em;
+                margin-bottom: 15px;
+            }
+            .form-group input[type="text"],
+            .form-group input[type="number"],
+            .form-group input[type="email"],
+            .form-group input[type="date"],
+            .form-group select,
+            .form-group textarea {
+                width: calc(100% - 22px); /* Adjust for padding and border */
+            }
+        }
+    </style>
+<script type="importmap">
+{
+  "imports": {
+    "react/": "https://esm.sh/react@^19.1.0/",
+    "react": "https://esm.sh/react@^19.1.0",
+    "react-dom/": "https://esm.sh/react-dom@^19.1.0/",
+    "@google/genai": "https://esm.sh/@google/genai@^1.4.0",
+    "react-toastify/": "https://esm.sh/react-toastify@^11.0.5/",
+    "react-toastify": "https://esm.sh/react-toastify@^11.0.5",
+    "react-native": "https://esm.sh/react-native@^0.79.3",
+    "@react-native-async-storage/async-storage": "https://esm.sh/@react-native-async-storage/async-storage@^2.2.0",
+    "@react-navigation/bottom-tabs": "https://esm.sh/@react-navigation/bottom-tabs@^7.3.14",
+    "@react-navigation/native": "https://esm.sh/@react-navigation/native@^7.1.10",
+    "@expo/vector-icons/": "https://esm.sh/@expo/vector-icons@^14.1.0/",
+    "@mui/material/": "https://esm.sh/@mui/material@^5.15.20/",
+    "@mui/material": "https://esm.sh/@mui/material@^5.15.20",
+    "@emotion/react/": "https://esm.sh/@emotion/react@^11.11.4/",
+    "@emotion/react": "https://esm.sh/@emotion/react@^11.11.4",
+    "@emotion/styled/": "https://esm.sh/@emotion/styled@^11.11.5/",
+    "@emotion/styled": "https://esm.sh/@emotion/styled@^11.11.5"
+  }
+}
+</script>
+<link rel="stylesheet" href="/index.css">
+</head>
+<body>
+    <div id="root"></div>
+    <script type="module" src="index.tsx"></script>
+<script type="module" src="/index.tsx"></script>
+</body>
+</html>
