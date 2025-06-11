@@ -75,7 +75,7 @@ Você precisará ter o Node.js e o npm (ou yarn) instalados em sua máquina.
 
 ### Instalação
 
-1. Obtenha uma Chave de API gratuita do Google Gemini em <https://ai.google.dev/>
+1. Obtenha uma Chave de API gratuita do Google Gemini em <[https://ai.google.dev/](https://aistudio.google.com/apikey)>
 2. Clone o repositório
    ```sh
    git clone [https://github.com/JonJonesBR/lex-pro-brasil.git](https://github.com/USUARIO/lex-pro-brasil.git)
@@ -88,12 +88,11 @@ Você precisará ter o Node.js e o npm (ou yarn) instalados em sua máquina.
    ```sh
    npm install
    ```
-5. Crie um arquivo `.env` na raiz do projeto e adicione sua Chave de API:
+5. Edite o arquivo `.env` na raiz do projeto e adicione sua Chave de API, ou coloque essa chave no próprio app pelo atalho na aba configurações:
    ```
    GEMINI_API_KEY='SUA_CHAVE_DE_API_AQUI'
    ```
-   *Obs: O nome desta variável pode precisar ser ajustado conforme a configuração do seu `vite.config.ts`.*
-
+   
 ### Execução
 
 Após a instalação, inicie o servidor de desenvolvimento:
