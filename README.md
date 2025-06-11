@@ -78,7 +78,7 @@ Você precisará ter o Node.js e o npm (ou yarn) instalados em sua máquina.
 1. Obtenha uma Chave de API gratuita do Google Gemini em <[https://ai.google.dev/](https://aistudio.google.com/apikey)>
 2. Clone o repositório
    ```sh
-   git clone [https://github.com/JonJonesBR/lex-pro-brasil.git]
+   git clone https://github.com/JonJonesBR/lex-pro-brasil.git
    ```
 3. Navegue até o diretório do projeto
    ```sh
