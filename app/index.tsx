@@ -485,7 +485,7 @@ const App: React.FC = () => {
 
     const handleAnalisarTextoParaProcesso = async () => {
         if (!aiClient) {
-            toast.warn("Chave API do Gemini não configurada ou inválida. Por favor, configure-a em 'Configurações > Configurar Chaves de IA'.");
+            toast.warn("Chave API do Gemini não configurada ou inválida. Por favor, configure-a em 'Configurações &gt; Configurar Chaves de IA'.");
             return;
         }
         if (!textoProcessoIA.trim()) {
@@ -718,7 +718,7 @@ ${textoProcessoIA}
 
     const handleResumirEmenta = async (ementa: string, itemId: string) => {
         if (!aiClient) {
-            toast.warn("Chave API do Gemini não configurada ou inválida. Por favor, configure-a em 'Configurações > Configurar Chaves de IA'.");
+            toast.warn("Chave API do Gemini não configurada ou inválida. Por favor, configure-a em 'Configurações &gt; Configurar Chaves de IA'.");
             return;
         }
         setLoadingResumoId(itemId);
@@ -889,7 +889,7 @@ ${textoProcessoIA}
 
     const handleAnalisarPeticao = async () => {
         if (!aiClient) {
-            toast.warn("Chave API do Gemini não configurada ou inválida. Por favor, configure-a em 'Configurações > Configurar Chaves de IA'.");
+            toast.warn("Chave API do Gemini não configurada ou inválida. Por favor, configure-a em 'Configurações &gt; Configurar Chaves de IA'.");
             return;
         }
         if (!peticaoParaAnalise.trim()) {
@@ -1069,7 +1069,7 @@ ${peticaoParaAnalise}
                             <h3>🤖 Cadastrar Processo com IA <span className="badge badge-ia">Beta</span></h3>
                             {!aiClient && (
                                 <p style={{color: 'orange', fontWeight: 'bold', border: '1px solid orange', padding: '10px', borderRadius: '4px'}}>
-                                    A funcionalidade de cadastro com IA está desabilitada. Por favor, configure sua Chave API do Gemini em "Configurações > Configurar Chaves de IA".
+                                    A funcionalidade de cadastro com IA está desabilitada. Por favor, configure sua Chave API do Gemini em "Configurações &gt; Configurar Chaves de IA".
                                 </p>
                             )}
                             {aiClient && (
@@ -1617,7 +1617,7 @@ ${peticaoParaAnalise}
                 return (
                     <div className="card">
                         <h2>Análise de Petições com IA <span className="badge badge-ia">IA</span> <span className="badge badge-pro">PRO</span></h2>
-                        {!aiClient && <p style={{color: 'orange', fontWeight: 'bold', border: '1px solid orange', padding: '10px', borderRadius: '4px'}}>A funcionalidade de Análise de Petições com IA está desabilitada. Por favor, configure sua Chave API do Gemini em "Configurações > Configurar Chaves de IA".</p>}
+                        {!aiClient && <p style={{color: 'orange', fontWeight: 'bold', border: '1px solid orange', padding: '10px', borderRadius: '4px'}}>A funcionalidade de Análise de Petições com IA está desabilitada. Por favor, configure sua Chave API do Gemini em "Configurações &gt; Configurar Chaves de IA".</p>}
                         {aiClient && (
                             <>
                                 <p>Cole o texto da sua petição abaixo para receber uma análise estruturada, identificando pontos fortes, frágeis, sugestões de jurisprudência e artigos de lei relevantes.</p>
