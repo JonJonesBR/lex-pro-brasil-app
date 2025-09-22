@@ -13,13 +13,9 @@ import {
   IconButton 
 } from '@mui/material';
 import { SelectChangeEvent } from '@mui/material/Select';
-import { 
-  DeleteIcon, 
-  FolderIcon, 
-  AddCircleOutlineIcon, 
-  AttachFileIcon 
-} from '@mui/icons-material';
-import { toast } from 'react-toastify';
+import DeleteIcon from '@mui/icons-material/Delete';
+import AttachFileIcon from '@mui/icons-material/AttachFile';
+import FolderIcon from '@mui/icons-material/Folder';import { toast } from 'react-toastify';
 
 interface Processo {
   id: string;

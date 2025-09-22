@@ -1,11 +1,9 @@
 import React from 'react';
-import { 
-  GavelIcon, 
-  EventNoteIcon, 
-  AccountBalanceWalletIcon, 
-  SpeedIcon,
-  AddCircleOutlineIcon
-} from '@mui/icons-material';
+import GavelIcon from '@mui/icons-material/Gavel';
+import EventNoteIcon from '@mui/icons-material/EventNote';
+import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
+import SpeedIcon from '@mui/icons-material/Speed';
+import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import { Button } from '@mui/material';
 
 interface Processo {

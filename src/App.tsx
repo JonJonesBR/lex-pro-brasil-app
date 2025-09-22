@@ -2,13 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { GoogleGenAI } from "@google/genai";
-import { 
-  GavelIcon, 
-  EventNoteIcon, 
-  AccountBalanceWalletIcon, 
-  SpeedIcon,
-  AddCircleOutlineIcon
-} from '@mui/icons-material';
+import GavelIcon from '@mui/icons-material/Gavel';
+import EventNoteIcon from '@mui/icons-material/EventNote';
+import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
+import SpeedIcon from '@mui/icons-material/Speed';
+import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import { Button } from '@mui/material';
 import Dashboard from './components/dashboard/Dashboard';
 import Processos from './components/processos/Processos';

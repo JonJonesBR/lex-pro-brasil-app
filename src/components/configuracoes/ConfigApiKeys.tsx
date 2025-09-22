@@ -1,6 +1,6 @@
 import React from 'react';
 import { TextField, Button, Box, Typography, Link } from '@mui/material';
-import { KeyIcon } from '@mui/icons-material';
+import KeyIcon from '@mui/icons-material/Key';
 
 interface ConfigApiKeysProps {
   inputGeminiApiKey: string;
