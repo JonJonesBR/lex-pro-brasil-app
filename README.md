@@ -1,126 +1,189 @@
-# Lex Pro Brasil: Assistente Jurídico Inteligente
+# Lex Pro Brasil
 
-[![Status do Projeto](https://img.shields.io/badge/status-em%20desenvolvimento-yellowgreen)](https://github.com/JonJonesBR/lex-pro-brasil)
-[![Versão](https://img.shields.io/badge/version-0.1.0-blue)](https://github.com/JonJonesBR/lex-pro-brasil)
-[![Licença](https://img.shields.io/badge/license-MIT-green)](https://github.com/JonJonesBR/lex-pro-brasil/blob/main/LICENSE)
+## Descrição
 
-<p align="center">
-  <img src="https://placehold.co/600x300/003366/FFFFFF?text=Lex+Pro+Brasil" alt="Logo Lex Pro Brasil">
-</p>
+Lex Pro Brasil é uma aplicação jurídica abrangente desenvolvida para auxiliar advogados e profissionais do direito no gerenciamento de processos, clientes, finanças e pesquisa jurídica. A aplicação oferece funcionalidades integradas com Inteligência Artificial e APIs públicas para proporcionar uma experiência eficiente e produtiva.
 
-> **Lex Pro Brasil** é uma aplicação web moderna e integrada, projetada para otimizar a rotina de advogados e profissionais do direito. Unindo ferramentas de gestão, produtividade e inteligência artificial, a plataforma centraliza o controle de processos, clientes e finanças, permitindo uma advocacia mais eficiente e estratégica.
+## Estrutura do Projeto
 
----
+```
+lex-pro-brasil/
+├── src/
+│   ├── components/
+│   │   ├── dashboard/
+│   │   ├── processos/
+│   │   ├── clientes/
+│   │   ├── agenda/
+│   │   ├── jurisprudencia/
+│   │   ├── legislacao/
+│   │   ├── calculadoras/
+│   │   ├── documentos/
+│   │   ├── financeiro/
+│   │   └── configuracoes/
+│   ├── services/
+│   ├── hooks/
+│   ├── utils/
+│   ├── types/
+│   └── context/
+├── LexProMobile/
+│   ├── app/
+│   │   ├── screens/
+│   │   └── services/
+│   └── App.tsx
+├── public/
+└── docs/
+```
 
-## 🎯 Sobre o Projeto
+## Funcionalidades
 
-O objetivo do Lex Pro Brasil é ser o braço direito digital do advogado brasileiro. Em um cenário jurídico cada vez mais competitivo, a eficiência na gestão e o acesso rápido à informação são cruciais. Nossa plataforma foi desenvolvida para solucionar esses desafios, oferecendo desde um CRM jurídico completo até ferramentas avançadas de análise de documentos com Inteligência Artificial, tudo em uma interface intuitiva e segura.
+### Web Application
 
----
+1. **Gestão de Processos e Casos**
+   - Painel de controle com métricas importantes
+   - Cadastro de processos com funcionalidade de IA
+   - Agenda e prazos processuais
+   - Gestão de clientes (CRM)
 
-## ✨ Funcionalidades Principais
+2. **Pesquisa e Inteligência Jurídica**
+   - Jurisprudência unificada (integração com API Datajud CNJ)
+   - Análise de petições com IA
+   - Legislação compilada (links para fontes oficiais)
 
-O Lex Pro Brasil está repleto de funcionalidades pensadas para o dia a dia da advocacia:
+3. **Ferramentas e Produtividade**
+   - Calculadoras jurídicas (monetária e prazos)
+   - Gerador de documentos (procurações, contratos)
+   - Controle financeiro (honorários e despesas)
 
-* **🏛️ Gestão de Processos e Casos:**
-    * **Painel de Controle (Dashboard):** Visão geral com processos ativos, próximos prazos e resumo financeiro.
-    * **Cadastro Inteligente de Processos:** Adicione processos manualmente ou utilize a **IA** do Google Gemini para extrair dados automaticamente de textos e preencher o formulário.
-    * **Agenda e Prazos:** Controle total sobre audiências, prazos processuais e reuniões.
+4. **Configurações e Segurança**
+   - Perfil do usuário
+   - Configuração de chaves de IA
+   - Notificações
+   - Segurança de dados
+   - Planos de assinatura
 
-* **🧠 Pesquisa e Inteligência Jurídica:**
-    * **Jurisprudência Unificada:** Pesquise em um banco de dados local ou diretamente na API pública do Datajud (CNJ) para o TJSP.
-    * **Análise de Petições com IA:** Cole o texto de suas petições e receba uma análise detalhada sobre pontos fortes, frágeis e sugestões de melhoria.
-    * **Legislação Compilada:** Acesso rápido aos principais códigos e leis do Brasil, com links para fontes oficiais.
+### Mobile Application
 
-* **🛠️ Ferramentas e Produtividade:**
-    * **Calculadoras Jurídicas:** Realize cálculos de atualização monetária e contagem de prazos processuais (dias úteis e corridos).
-    * **Gerador de Documentos:** Crie procurações e contratos de honorários personalizados a partir de templates, preenchidos com os dados dos seus clientes e do seu perfil.
-    * **Controle Financeiro:** Gerencie honorários e despesas do escritório de forma simples e organizada.
+1. **Gestão de Clientes**
+   - Cadastro e gerenciamento de clientes
+   - Armazenamento local com AsyncStorage
 
-* **👥 Gestão de Clientes (CRM):**
-    * Cadastro completo de clientes com busca e edição fáceis.
-    * Integração com outros módulos para uma visão 360º do cliente.
+2. **Gestão de Processos**
+   - Cadastro de processos
+   - Visualização de detalhes
 
-* **⚙️ Configurações e Perfil:**
-    * **Perfil do Usuário:** Salve suas informações profissionais (Nome, OAB, etc.) para uso em todo o sistema.
-    * **Configuração de API:** Insira sua própria chave da API do Google Gemini para habilitar as funcionalidades de IA.
+3. **Agenda e Prazos**
+   - Cadastro de eventos e prazos
+   - Categorização por tipo
 
----
+4. **Configurações**
+   - Gerenciamento de chaves de API
 
-## 🚀 Tecnologias Utilizadas
+## Tecnologias Utilizadas
 
-Este projeto foi construído com as seguintes tecnologias:
+### Frontend Web
+- React
+- TypeScript
+- Material-UI
+- Vite (build tool)
 
-* **Frontend:** [React](https://reactjs.org/)
-* **Linguagem:** [TypeScript](https://www.typescriptlang.org/)
-* **Build Tool:** [Vite](https://vitejs.dev/)
-* **Estilização:** [Material-UI (MUI)](https://mui.com/)
-* **Inteligência Artificial:** [Google Gemini API](https://ai.google.dev/)
-* **Notificações:** [React Toastify](https://fkhadra.github.io/react-toastify/introduction)
+### Frontend Mobile
+- React Native
+- React Navigation
+- AsyncStorage
 
----
+### Inteligência Artificial
+- Google Gemini API
 
-## 🏁 Começando
+### APIs Externas
+- Datajud (CNJ) para jurisprudência
 
-Para executar uma cópia local do projeto, siga estes passos simples.
+### Armazenamento
+- LocalStorage (web)
+- AsyncStorage (mobile)
+
+## Instalação
 
 ### Pré-requisitos
+- Node.js (versão 14 ou superior)
+- npm ou yarn
 
-Você precisará ter o Node.js e o npm (ou yarn) instalados em sua máquina.
+### Passos de Instalação
 
-* **npm**
-    ```sh
-    npm install npm@latest -g
-    ```
+1. Clone o repositório:
+```bash
+git clone https://github.com/seu-usuario/lex-pro-brasil.git
+cd lex-pro-brasil
+```
 
-### Instalação
+2. Instale as dependências:
+```bash
+npm install
+```
 
-1. Obtenha uma Chave de API gratuita do Google Gemini em <[https://ai.google.dev/](https://aistudio.google.com/apikey)>
-2. Clone o repositório
-   ```sh
-   git clone https://github.com/JonJonesBR/lex-pro-brasil.git
-   ```
-3. Navegue até o diretório do projeto
-   ```sh
-   cd lex-pro-brasil
-   ```
-4. Instale as dependências do NPM
-   ```sh
-   npm install
-   ```
-5. Edite o arquivo `.env` na raiz do projeto e adicione sua Chave de API, ou coloque essa chave no próprio app pelo atalho na aba configurações:
-   ```
-   GEMINI_API_KEY='SUA_CHAVE_DE_API_AQUI'
-   ```
-   
-### Execução
+3. Configure as variáveis de ambiente:
+```bash
+# Crie um arquivo .env na raiz do projeto
+echo "GEMINI_API_KEY=sua_chave_api_aqui" > .env
+```
 
-Após a instalação, inicie o servidor de desenvolvimento:
-```sh
+4. Inicie a aplicação web:
+```bash
 npm run dev
 ```
-Abra <http://localhost:5173> (ou a porta indicada no seu terminal) no seu navegador para ver a aplicação em funcionamento.
 
----
+5. Para a aplicação mobile, navegue até o diretório:
+```bash
+cd LexProMobile
+npm install
+npm start
+```
 
-## 🗺️ Roteiro de Desenvolvimento
+## Uso
 
-Veja os [issues abertos](https://github.com/JonJonesBR/lex-pro-brasil/issues) para uma lista completa das funcionalidades propostas (e problemas conhecidos).
+### Web Application
+Acesse `http://localhost:3000` no seu navegador após iniciar a aplicação.
 
-* \[ \] **Fase 1: MVP (Produto Mínimo Viável)** - Concluído
-  * \[x\] Módulos de Gestão (Processos, Clientes, Agenda) com armazenamento local.
-  * \[x\] Ferramentas essenciais (Calculadoras, Gerador de Documentos).
-  * \[x\] Integração básica com API do Gemini via chave do usuário.
-* \[ \] **Fase 2: Expansão de Funcionalidades**
-  * \[ \] Implementação de um backend para armazenamento persistente e seguro.
-  * \[ \] Sistema de autenticação de usuários.
-  * \[ \] Calculadoras jurídicas adicionais (Trabalhista, Custas).
-* \[ \] **Fase 3: Inteligência e Integrações**
-  * \[ \] Integração real com APIs de tribunais para busca de movimentações.
-  * \[ \] Aprimoramento dos modelos de IA para análises mais profundas.
+### Mobile Application
+Use o Expo Go app no seu dispositivo móvel para escanear o QR code gerado após o comando `npm start`.
 
----
+## Estrutura de Componentes
 
-## 📜 Licença
+### Componentes Web
+- `src/App.tsx` - Componente principal da aplicação
+- `src/components/dashboard/Dashboard.tsx` - Painel de controle
+- `src/components/processos/Processos.tsx` - Gestão de processos
+- `src/components/clientes/Clientes.tsx` - Gestão de clientes
+- `src/components/agenda/Agenda.tsx` - Agenda e prazos
+- `src/components/jurisprudencia/Jurisprudencia.tsx` - Pesquisa de jurisprudência
+- `src/components/legislacao/Legislacao.tsx` - Base de legislação
+- `src/components/calculadoras/Calculadoras.tsx` - Calculadoras jurídicas
+- `src/components/documentos/Documentos.tsx` - Gerador de documentos
+- `src/components/financeiro/Financeiro.tsx` - Controle financeiro
+- `src/components/configuracoes/` - Componentes de configuração
 
-Distribuído sob a Licença MIT. Veja `LICENSE.txt` para mais informações.
+### Serviços
+- `src/services/apiKeyService.ts` - Gerenciamento de chaves de API
+- `src/services/dataService.ts` - Operações com localStorage
+- `src/services/notificationService.ts` - Serviço de notificações
+
+### Utilitários
+- `src/utils/formatters.ts` - Funções de formatação
+- `src/utils/validators.ts` - Funções de validação
+
+## Contribuição
+
+1. Faça um fork do projeto
+2. Crie uma branch para sua feature (`git checkout -b feature/AmazingFeature`)
+3. Commit suas mudanças (`git commit -m 'Add some AmazingFeature'`)
+4. Push para a branch (`git push origin feature/AmazingFeature`)
+5. Abra um Pull Request
+
+## Licença
+
+Este projeto está licenciado sob a licença MIT - veja o arquivo [LICENSE.md](LICENSE.md) para detalhes.
+
+## Contato
+
+Seu Nome - seu.email@exemplo.com
+
+Link do Projeto: [https://github.com/seu-usuario/lex-pro-brasil](https://github.com/seu-usuario/lex-pro-brasil)

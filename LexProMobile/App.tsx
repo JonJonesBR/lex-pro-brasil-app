@@ -2,37 +2,16 @@
 import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { StyleSheet, View, Text, StatusBar, Platform } from 'react-native';
+import { StyleSheet, StatusBar, Platform } from 'react-native';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 
 // Importe suas telas
 import ClientesScreen from './app/screens/ClientesScreen';
-import ConfigScreen from './app/screens/ConfigScreen'; // Importar a nova tela
-
-// Componentes de Placeholder para outras telas
-const ProcessosScreenPlaceholder: React.FC = () => (
-    <View style={styles.placeholderContainer}>
-        <FontAwesome name="legal" size={50} color="#003366" />
-        <Text style={styles.placeholderText}>Tela de Processos (Em Breve)</Text>
-    </View>
-);
-
-const AgendaScreenPlaceholder: React.FC = () => (
-    <View style={styles.placeholderContainer}>
-        <FontAwesome name="calendar" size={50} color="#003366" />
-        <Text style={styles.placeholderText}>Tela de Agenda (Em Breve)</Text>
-    </View>
-);
+import ProcessosScreen from './app/screens/ProcessosScreen';
+import AgendaScreen from './app/screens/AgendaScreen';
+import ConfigScreen from './app/screens/ConfigScreen';
 
 const Tab = createBottomTabNavigator();
-
-// Define um tipo para as rotas do Tab Navigator para melhor type-safety
-type RootTabParamList = {
-  Clientes: undefined;
-  Processos: undefined;
-  Agenda: undefined;
-  Configurações: undefined; // Nova rota
-};
 
 const App: React.FC = () => {
     return (
@@ -40,7 +19,7 @@ const App: React.FC = () => {
             <StatusBar barStyle="light-content" backgroundColor="#003366" />
             <NavigationContainer>
                 <Tab.Navigator
-                    id={undefined} // Added to satisfy the type error
+                    id={undefined}
                     screenOptions={({ route }) => ({
                         tabBarIcon: ({ focused, color, size }) => {
                             let iconName: React.ComponentProps<typeof FontAwesome>['name'] = 'circle';
@@ -84,12 +63,12 @@ const App: React.FC = () => {
                     />
                     <Tab.Screen
                         name="Processos"
-                        component={ProcessosScreenPlaceholder}
+                        component={ProcessosScreen}
                         options={{ title: 'Processos' }}
                     />
                     <Tab.Screen
                         name="Agenda"
-                        component={AgendaScreenPlaceholder}
+                        component={AgendaScreen}
                         options={{ title: 'Agenda' }}
                     />
                     <Tab.Screen
@@ -102,20 +81,5 @@ const App: React.FC = () => {
         </>
     );
 };
-
-const styles = StyleSheet.create({
-    placeholderContainer: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: '#f0f2f5',
-    },
-    placeholderText: {
-        marginTop: 15,
-        fontSize: 18,
-        color: '#003366',
-        fontWeight: '500',
-    },
-});
 
 export default App;
